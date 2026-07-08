@@ -23,10 +23,20 @@ with col2:
 
 st.divider()
 
+if 'uploader_key' not in st.session_state:
+    st.session_state['uploader_key'] = 0
+
+def reset_dashboard():
+    st.session_state['uploader_key'] += 1
+    if 'metrics' in st.session_state:
+        del st.session_state['metrics']
+    if 'scores' in st.session_state:
+        del st.session_state['scores']
+
 st.header("1. Upload Assessment Data")
 st.write("Please upload the institution's assessment results in PDF or Excel format.")
 
-uploaded_file = st.file_uploader("Upload PDF or Excel file", type=['pdf', 'xlsx'])
+uploaded_file = st.file_uploader("Upload PDF or Excel file", type=['pdf', 'xlsx'], key=f"uploader_{st.session_state['uploader_key']}")
 
 if uploaded_file is not None:
     file_type = uploaded_file.name.split('.')[-1].lower()
@@ -95,5 +105,6 @@ if 'metrics' in st.session_state:
         """, unsafe_allow_html=True)
         
     st.info("👈 Navigate to the pages in the sidebar for detailed analysis, gaps, and training recommendations.")
+    st.button("🧹 Clear Dashboard & Start Over", on_click=reset_dashboard, type="primary")
 else:
     st.info("Upload an assessment file to begin.")
