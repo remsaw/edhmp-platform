@@ -16,7 +16,7 @@ st.markdown("<h1 style='text-align: center; color: var(--egyhia-dark);'>Egyptian
 
 col1, col2 = st.columns([1, 4])
 with col1:
-    st.image(r"C:\EDHMP\EgYPTIAN HEALTH INFORMATICS ASSOCIATION (3) (1).png", use_container_width=True)
+    st.image("EgYPTIAN HEALTH INFORMATICS ASSOCIATION (3) (1).png", use_container_width=True)
 with col2:
     st.title("Digital Health Maturity Platform (EDHMP)")
     st.markdown("Analyze maturity assessment results, extract gaps, and propose professional training programs.")
