@@ -1,0 +1,29 @@
+name: Keep Streamlit App Awake
+
+on:
+  schedule:
+    # Runs at 00:00 UTC every 3 days
+    - cron: '0 0 */3 * *'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Streamlit App
+        run: |
+          # Replace this URL with your actual Streamlit Cloud URL if it differs
+          APP_URL="https://edhmp.egyhia.org"
+          echo "Pinging $APP_URL to keep it awake..."
+          
+          # Use curl with -I to just fetch headers, -s to be silent, -f to fail on server errors, --max-time to prevent hanging
+          HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}\n" --max-time 30 $APP_URL)
+          
+          if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 301 ] || [ "$HTTP_STATUS" -eq 302 ]; then
+            echo "Successfully pinged the app! (Status: $HTTP_STATUS)"
+          else
+            echo "Warning: Received unexpected status code $HTTP_STATUS"
+            # We don't fail the action here, as a temporary timeout might occur if it was heavily asleep
+            # The simple act of sending the curl request triggers Streamlit to wake the app up.
+          fi
